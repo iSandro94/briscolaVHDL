@@ -18,7 +18,7 @@ package briscola_package is
 			numero		: integer;
 			seme_carta	: seme;
 			valore		: integer;
-			briscola		: boolean;
+			briscola	: boolean;
 	end record;
 	
 	type mazzo is array (0 to 39) of carta; -- definisce il numero di carte all'interno del mazzo

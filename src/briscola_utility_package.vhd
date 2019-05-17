@@ -15,6 +15,19 @@ package briscola_utility_package is
 	
 	-- dato un carattere, genera il suo codice equivalente per un display a 7 segmenti
 	function digitTo7SegmentDisplay(carattere : character) return std_logic_vector;
+	
+	-- dato il numero della carta, restituisce il suo valore
+	function getValorefromNumber (numero: integer) return integer;
+	
+	-- inverte l'ordine dei bit in un qualsiasi vettore
+	function reverse_vector (a: in std_logic_vector) return std_logic_vector;
+	
+	-- controlla se un vettore è pieno di zeri
+	function vectorIsNotZero (vector: in std_logic_vector) return boolean;
+	
+	-- data la carta, la trasforma nel corrispondente byte
+	function fromCartaToByte (cart: in carta) return std_logic_vector;
+	
 
 end package;
 
@@ -96,6 +109,66 @@ package body briscola_utility_package is
 		else 
 			return "1111110";
 		end if;
+	end function;
+	
+		-- dato il numero della carta, restituisce il suo valore
+	function getValorefromNumber (numero: integer) return integer is
+	begin
+		if (numero = 1) then return 11;
+		elsif (numero = 3) then return 10;
+		elsif (numero = 8) then return 2;
+		elsif (numero = 9) then return 3;
+		elsif (numero = 10) then return 4;
+		else return 0;
+		end if;
+	
+	end function;
+	
+	-- inverte l'ordine dei bit in un qualsiasi vettore
+	function reverse_vector (a: in std_logic_vector) return std_logic_vector is
+	  variable result: std_logic_vector(a'RANGE);
+	  alias aa: std_logic_vector(a'REVERSE_RANGE) is a;
+	begin
+	  for i in aa'RANGE loop
+		result(i) := aa(i);
+	  end loop;
+	  return result;
+	end function;
+	
+	-- controlla se un vettore è pieno di zeri
+	function vectorIsNotZero (vector: in std_logic_vector) return boolean is
+	begin
+		for i in 0 to vector'LENGTH-1 loop
+			if (vector(i) = '1') then
+				return true;
+			end if;
+		end loop;
+		return false;
+	end function;
+	
+	
+	-- data la carta, la trasforma nel corrispondente byte
+	function fromCartaToByte (cart: in carta) return std_logic_vector is
+		variable byte_carta: std_logic_vector(0 to 7);
+	begin
+		if(cart.briscola) then
+			byte_carta(0) := '1';
+		else
+			byte_carta(0) := '0';
+		end if;
+		case cart.seme_carta is
+			when BASTONI =>
+				byte_carta(1 to 2) := "00";
+			when DENARI =>
+				byte_carta(1 to 2) := "10";
+			when COPPE =>
+				byte_carta(1 to 2) := "01";
+			when SPADE =>
+				byte_carta(1 to 2) := "11";
+		end case;
+		byte_carta(3 to 6) := reverse_vector(std_logic_vector(to_unsigned(cart.numero, 4)));
+		byte_carta(7) := '1';
+		return byte_carta;
 	end function;
 
 end package body;
