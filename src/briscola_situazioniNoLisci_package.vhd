@@ -348,7 +348,7 @@ package body briscola_situazioniNoLisci_package is
 	
 	-- numero carichi: 1, numero briscole: 2
 	function situazione5(mano : mano_cpu) return integer is 
-		variable indice 				: integer;
+		variable indice 			: integer;
 		variable carta_piu_bassa 	: carta;
 	begin 
 		carta_piu_bassa := mano(0);
